@@ -22,9 +22,9 @@
 ![Wireshark](https://img.shields.io/badge/Wireshark-black?style=for-the-badge&logo=wireshark&logoColor=1E90FF)
 ![GitHub](https://img.shields.io/badge/GitHub-black?style=for-the-badge&logo=github&logoColor=1E90FF)
 
-![Mac](https://img.shields.io/badge/Mac-black?style=for-the-badge&logo=apple&logoColor=00BFFF)
-![Windows](https://img.shields.io/badge/Windows-black?style=for-the-badge&logo=windows&logoColor=00BFFF)
-![Linux](https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=00BFFF)
+![Mac](https://img.shields.io/badge/Mac-black?style=for-the-badge&logo=apple&logoColor=1E90FF)
+![Windows](https://img.shields.io/badge/Windows-black?style=for-the-badge&logo=windows&logoColor=1E90FF)
+![Linux](https://img.shields.io/badge/Linux-black?style=for-the-badge&logo=linux&logoColor=1E90FF)
 <br />
 <br />
 

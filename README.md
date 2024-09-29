@@ -4,7 +4,7 @@
 <img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
 ![wolfSSL](https://img.shields.io/badge/wolfSSL_|_Sacramento_State_University_|_Computer_Science_|_Cyber_Security-black?style=for-the-badge&logo=wolfssl&logoColor=00BFFF)
 <br />
-<br />
+<img src="https://private-user-images.githubusercontent.com/74038190/240815616-7b282ec6-fcc3-4600-90a7-2c3140549f58.gif?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3Mjc2NDc4NzIsIm5iZiI6MTcyNzY0NzU3MiwicGF0aCI6Ii83NDAzODE5MC8yNDA4MTU2MTYtN2IyODJlYzYtZmNjMy00NjAwLTkwYTctMmMzMTQwNTQ5ZjU4LmdpZj9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA5MjklMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwOTI5VDIyMDYxMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTRhZDFhMjBlN2Y0MTI5OTZmNWQxODY2MjY0ZTBiMDZiYTc3MzJjNmUzYTZlYjlkODU5ZjNiNjU5NmNkYWI5OWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.KnAwgLbvudWBPIhn4JZJMf6B4Ydfty_Ss1mNh62hF8g" width="100" height="100">
 
 <b>&nbsp; LANGUAGES AND TOOLS</b>
 <img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">

@@ -2,9 +2,7 @@
   
 <b>&nbsp;</b>
 <img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
-![wolfSSL](https://img.shields.io/badge/wolfSSL-black?style=for-the-badge&logo=wolfssl&logoColor=00BFFF)
-![Sacramento State University](https://img.shields.io/badge/Sacramento_State_University-black?style=for-the-badge&logo=graduation-cap&logoColor=00BFFF)
-![Computer Science](https://img.shields.io/badge/Computer_Science-black?style=for-the-badge&logo=computer&logoColor=00BFFF)
+![wolfSSL](https://img.shields.io/badge/wolfSSL_|_Sacramento_State_University_|_Computer_Science_|_Cyber_Security-black?style=for-the-badge&logo=wolfssl&logoColor=00BFFF)
 <br />
 <br />
 

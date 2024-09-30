@@ -13,6 +13,8 @@
 ![C](https://img.shields.io/badge/C-black?style=for-the-badge&logo=c&logoColor=1E90FF)
 ![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=c-sharp&logoColor=1E90FF)
 ![Java](https://img.shields.io/badge/Java-black?style=for-the-badge&logo=java&logoColor=1E90FF)
+![Markdown](https://img.shields.io/badge/Markdown-black?style=for-the-badge&logo=markdown&logoColor=1E90FF)
+![Shell Script](https://img.shields.io/badge/Shell_Script-black?style=for-the-badge&logo=gnu-bash&logoColor=1E90FF)
 
 ![Visual_Studio_Code](https://img.shields.io/badge/Visual_Studio_Code-black?style=for-the-badge&logo=visual-studio-code&logoColor=1E90FF)
 ![Visual Studio](https://img.shields.io/badge/Visual_Studio-black?style=for-the-badge&logo=visual-studio&logoColor=1E90FF)

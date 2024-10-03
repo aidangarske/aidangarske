@@ -30,7 +30,7 @@
 <br />
 <br />
 
-<b>&nbsp; 📊 GITHUB STATUS</b>
+<b>&nbsp; GITHUB STATUS</b>
 <img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
 
 <p align="center">

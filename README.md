@@ -1,12 +1,10 @@
 <div align="center">
   
 <b>&nbsp;</b>
-<img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
 ![wolfSSL](https://img.shields.io/badge/wolfSSL_|_Sacramento_State_University_|_Computer_Science_|_Cyber_Security-black?style=for-the-badge&logo=wolfssl&logoColor=00BFFF)
 <br />
 
 <b>&nbsp; LANGUAGES AND TOOLS</b>
-<img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
 
 &nbsp;
 ![C](https://img.shields.io/badge/C-black?style=for-the-badge&logo=c&logoColor=1E90FF)
@@ -30,7 +28,6 @@
 <br />
 
 <b>&nbsp; GITHUB STATUS</b>
-<img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api?username=aidangarske&include_all_commits=true&show_icons=true&title_color=1E90FF&icon_color=1E90FF&text_color=FFFFFF&bg_color=000000" alt="GitHub Stats" />
@@ -42,4 +39,3 @@
   <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=aidangarske&layout=compact&bg_color=000000&title_color=1E90FF&text_color=FFFFFF&icon_color=1E90FF" alt="Top langs">
 </p>
 
-<img src="https://via.placeholder.com/1000x2/1E90FF/1E90FF?text=" alt="Blue Line">

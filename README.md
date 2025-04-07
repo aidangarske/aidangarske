@@ -37,7 +37,4 @@
 <p align="center">
   <img src="https://github-readme-streak-stats.herokuapp.com/?user=aidangarske&background=000000&stroke=1E90FF&ring=1E90FF&fire=FFFFFF&currStreakNum=FFFFFF&sideNums=FFFFFF&currStreakLabel=FFFFFF&sideLabels=FFFFFF&dates=FFFFFF" alt="GitHub Streak" />
 </p>
-<p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=aidangarske&layout=compact&bg_color=000000&title_color=1E90FF&text_color=FFFFFF&icon_color=1E90FF" alt="Top langs">
-</p>
 

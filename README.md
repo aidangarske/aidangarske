@@ -1,8 +1,4 @@
 <div align="center">
-  
-<b>&nbsp;</b>
-![wolfSSL](https://img.shields.io/badge/wolfSSL_|_Computer_Science_|_Cyber_Security-black?style=for-the-badge&logo=wolfssl&logoColor=00BFFF)
-<br />
 
 <b>&nbsp; LANGUAGES AND TOOLS</b>
 

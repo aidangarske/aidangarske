@@ -13,8 +13,6 @@
 ![Shell Script](https://img.shields.io/badge/Shell_Script-black?style=for-the-badge&logo=gnu-bash&logoColor=1E90FF)
 ![YAML](https://img.shields.io/badge/YAML-black?style=for-the-badge&logo=yaml&logoColor=1E90FF)
 ![HTML5](https://img.shields.io/badge/HTML5-black?style=for-the-badge&logo=html5&logoColor=1E90FF)
-![RUST](https://img.shields.io/badge/HTML5-black?style=for-the-badge&logo=html5&logoColor=1E90FF)
-
 <br />
 
 <b>&nbsp; SECURITY & NETWORKING WORK </b>

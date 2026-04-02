@@ -8,7 +8,8 @@
 ![Assembly](https://img.shields.io/badge/Assembly-black?style=for-the-badge&logo=webassembly&logoColor=1E90FF)
 ![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=c-sharp&logoColor=1E90FF)
 ![Python](https://img.shields.io/badge/Python-black?style=for-the-badge&logo=python&logoColor=1E90FF)
-![JavaScript](https://img.shields.io/badge/JavaScript-black?style=for-the-badge&logo=javascript&logoColor=1E90FF)
+![Java](https://img.shields.io/badge/Java-black?style=for-the-badge&logo=java&logoColor=1E90FF)
+![JavaScript](https://img.shields.io/badge/JavaScript-black?style=for-the-badge&logo=javascript&logoColor=1E90FF)\
 ![Groovy](https://img.shields.io/badge/Groovy-black?style=for-the-badge&logo=apache-groovy&logoColor=1E90FF)
 ![Shell Script](https://img.shields.io/badge/Shell_Script-black?style=for-the-badge&logo=gnu-bash&logoColor=1E90FF)
 ![YAML](https://img.shields.io/badge/YAML-black?style=for-the-badge&logo=yaml&logoColor=1E90FF)

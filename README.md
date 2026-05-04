@@ -9,6 +9,7 @@
 ![C#](https://img.shields.io/badge/C%23-black?style=for-the-badge&logo=c-sharp&logoColor=1E90FF)
 ![Python](https://img.shields.io/badge/Python-black?style=for-the-badge&logo=python&logoColor=1E90FF)
 ![Java](https://img.shields.io/badge/Java-black?style=for-the-badge&logo=java&logoColor=1E90FF)
+![Rust](https://img.shields.io/badge/Rust-black?style=for-the-badge&logo=java&logoColor=1E90FF)
 ![JavaScript](https://img.shields.io/badge/JavaScript-black?style=for-the-badge&logo=javascript&logoColor=1E90FF)\
 ![Groovy](https://img.shields.io/badge/Groovy-black?style=for-the-badge&logo=apache-groovy&logoColor=1E90FF)
 ![Shell Script](https://img.shields.io/badge/Shell_Script-black?style=for-the-badge&logo=gnu-bash&logoColor=1E90FF)
@@ -24,6 +25,7 @@
 ![OpenSSL Providers](https://img.shields.io/badge/OpenSSL_Providers-black?style=for-the-badge&logo=openssl&logoColor=1E90FF)
 ![TPM 2.0](https://img.shields.io/badge/TPM_2.0-black?style=for-the-badge&logo=trusted-computing-group&logoColor=1E90FF)
 ![SPDM](https://img.shields.io/badge/SPDM-black?style=for-the-badge&logo=dmtf&logoColor=1E90FF)
+![COSE/CBOR](https://img.shields.io/badge/COSE/CBOR-black?style=for-the-badge&logo=dmtf&logoColor=1E90FF)
 
 <br />
 

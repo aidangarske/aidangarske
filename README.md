@@ -51,6 +51,14 @@
 
 ---
 
+<b>&nbsp; CONTRIBUTIONS IN 3D</b>
+
+<p align="center">
+  <img src="https://isometric-contributions-spectrewolf8.onrender.com/api/graph?username=aidangarske&amp;theme=ocean" alt="Aidan's GitHub contributions as a blue 3D graph" width="100%" />
+</p>
+
+<br />
+
 <b>&nbsp; GITHUB STATUS</b>
 
 <p align="center">

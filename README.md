@@ -51,19 +51,13 @@
 
 ---
 
-<b>&nbsp; CONTRIBUTIONS IN 3D</b>
-
 <p align="center">
-  <img src="https://isometric-contributions-spectrewolf8.onrender.com/api/graph?username=aidangarske&amp;theme=ocean" alt="Aidan's GitHub contributions as a blue 3D graph" width="100%" />
+  <a href="https://gitcity.natrajx.in/aidangarske/isometric">
+    <img src="https://gitcity.natrajx.in/api/svg?u=aidangarske&amp;theme=ocean" alt="Aidan's GitHub contributions as a blue 3D skyline" />
+  </a>
 </p>
-
-<br />
 
 <b>&nbsp; GITHUB STATUS</b>
-
-<p align="center">
-  <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&include_all_commits=true&show_icons=true&title_color=1E90FF&icon_color=1E90FF&text_color=FFFFFF&bg_color=000000" alt="GitHub Stats" />
-</p>
 
 <p align="center">
   <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=aidangarske&layout=compact&title_color=1E90FF&icon_color=1E90FF&text_color=FFFFFF&bg_color=000000&hide=html,css" alt="Top Languages" />

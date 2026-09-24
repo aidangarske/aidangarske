@@ -60,6 +60,10 @@
 <b>&nbsp; GITHUB STATUS</b>
 
 <p align="center">
+  <img src="https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=1E90FF&amp;icon_color=1E90FF&amp;text_color=FFFFFF&amp;bg_color=000000" alt="GitHub Stats" />
+</p>
+
+<p align="center">
   <img src="https://github-readme-stats-eight-theta.vercel.app/api/top-langs/?username=aidangarske&layout=compact&title_color=1E90FF&icon_color=1E90FF&text_color=FFFFFF&bg_color=000000&hide=html,css" alt="Top Languages" />
 </p>
 

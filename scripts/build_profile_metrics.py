@@ -143,11 +143,11 @@ def render(graph, graph_style, annual, through, rank, score, languages, counts, 
     add(root, "line", {"x1": "292", "y1": "72", "x2": "292", "y2": "331", "stroke": "#30363d"})
 
     label(root, 24, 37, "Aidan Garske", 23, BLUE, "bold")
-    label(root, 24, 56, "@aidangarske  ·  %s contributions in the last year" % f"{annual:,}", 12)
+    label(root, 24, 56, "@aidangarske  ·  %s contributions in the last year" % f"{annual:,}", 13)
     add(root, "circle", {"cx": "688", "cy": "37", "r": "23", "fill": "#0d1117", "stroke": BLUE, "stroke-width": "4"})
-    label(root, 688, 42, rank, 14, PALE, "bold", "middle")
+    label(root, 688, 42, rank, 16, PALE, "bold", "middle")
 
-    label(root, 24, 84, "ACTIVITY", 12, BLUE, "bold")
+    label(root, 24, 84, "ACTIVITY", 13, BLUE, "bold")
     stats = (
         (score["Total Commits"], "commits"),
         (f"{counts['prs']:,}", "PRs opened"),
@@ -159,10 +159,10 @@ def render(graph, graph_style, annual, through, rank, score, languages, counts, 
     for index, (value, caption) in enumerate(stats):
         x = 24 + (index % 2) * 136
         y = 111 + (index // 2) * 42
-        label(root, x, y, value, 18, PALE, "bold")
-        label(root, x, y + 15, caption, 10, MUTED)
+        label(root, x, y, value, 20, PALE, "bold")
+        label(root, x, y + 15, caption, 11, MUTED)
 
-    label(root, 24, 231, "TOP LANGUAGES", 12, BLUE, "bold")
+    label(root, 24, 231, "TOP LANGUAGES", 13, BLUE, "bold")
     x = 24.0
     for index, (_, percent) in enumerate(languages):
         width = 248 * percent / 100
@@ -172,12 +172,12 @@ def render(graph, graph_style, annual, through, rank, score, languages, counts, 
         col, row = index % 2, index // 2
         x, y = 24 + col * 136, 271 + row * 25
         add(root, "circle", {"cx": str(x + 4), "cy": str(y - 4), "r": "4", "fill": SHADES[index]})
-        label(root, x + 13, y, "%s  %.1f%%" % (name, percent), 11, PALE)
+        label(root, x + 13, y, "%s  %.1f%%" % (name, percent), 12, PALE)
 
-    label(root, 312, 83, "3D CONTRIBUTIONS", 12, BLUE, "bold")
+    label(root, 312, 83, "3D CONTRIBUTIONS", 13, BLUE, "bold")
     container = add(root, "g", {"transform": "translate(300 55) scale(0.34)"})
     container.append(copy.deepcopy(graph))
-    label(root, 24, 343, "Calendar through %s" % through.strftime("%d %b %Y"), 10, MUTED)
+    label(root, 24, 343, "Calendar through %s" % through.strftime("%d %b %Y"), 11, MUTED)
     output.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(root).write(output, encoding="utf-8", xml_declaration=True)
 

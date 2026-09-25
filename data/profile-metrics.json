@@ -1,0 +1,46 @@
+{
+  "as_of": "2026-09-25",
+  "login": "aidangarske",
+  "name": "Aidan Garske",
+  "joined": "2024-04-27",
+  "followers": 13,
+  "public_repos": 53,
+  "owned_repo_stars": 23,
+  "all_time_contributions": 7093,
+  "yearly_contributions": [
+    {
+      "year": 2024,
+      "contributions": 180
+    },
+    {
+      "year": 2025,
+      "contributions": 817
+    },
+    {
+      "year": 2026,
+      "contributions": 6096
+    }
+  ],
+  "public_authored_commits": 5947,
+  "repos_with_commits_all_time": 41,
+  "prs_opened": 728,
+  "prs_reviewed": 389,
+  "issues_opened": 110,
+  "threads_commented": 483,
+  "rank": "A++",
+  "languages": {
+    "since": "2025-09-25",
+    "repositories": 12,
+    "authored_commits": 2513,
+    "source_file_changes": 6012,
+    "counts": {
+      "C": 5326,
+      "Shell": 423,
+      "JavaScript": 139,
+      "Rust": 66,
+      "Python": 55,
+      "Go": 2,
+      "C++": 1
+    }
+  }
+}

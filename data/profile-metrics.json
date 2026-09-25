@@ -1,0 +1,45 @@
+{
+  "as_of": "2026-09-25",
+  "login": "aidangarske",
+  "name": "Aidan Garske",
+  "joined": "2024-04-27",
+  "followers": 13,
+  "public_repos": 53,
+  "owned_repo_stars": 23,
+  "commits_last_year": 3274,
+  "repos_with_commits_last_year": 38,
+  "prs_opened": 728,
+  "prs_reviewed": 389,
+  "issues_opened": 110,
+  "threads_commented": 483,
+  "top_repos": [
+    {
+      "name": "wolfSSL/wolfTPM",
+      "commits": 816
+    },
+    {
+      "name": "aidangarske/wolfNanoTLS",
+      "commits": 608
+    },
+    {
+      "name": "wolfSSL/wolfTrust",
+      "commits": 448
+    }
+  ],
+  "languages": {
+    "since": "2025-09-25",
+    "repositories": 12,
+    "authored_commits": 2513,
+    "source_file_changes": 6012,
+    "counts": {
+      "C": 5326,
+      "Shell": 423,
+      "JavaScript": 139,
+      "Rust": 66,
+      "Python": 55,
+      "Go": 2,
+      "C++": 1
+    }
+  },
+  "rank": "A++"
+}

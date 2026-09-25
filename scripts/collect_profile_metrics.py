@@ -3,7 +3,7 @@
 
 import argparse
 from collections import Counter
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 import json
 from pathlib import Path
 import subprocess
@@ -68,12 +68,53 @@ def repo_languages(directory, since):
     return commits, counts
 
 
+def contribution_history(joined):
+    now = datetime.now(timezone.utc)
+    years = range(date.fromisoformat(joined).year, now.year + 1)
+    sections = []
+    for year in years:
+        end = (now.isoformat().replace("+00:00", "Z") if year == now.year
+               else "%s-12-31T23:59:59Z" % year)
+        sections.append(
+            'y%s: contributionsCollection(from:"%s-01-01T00:00:00Z",to:"%s") '
+            '{ contributionCalendar { totalContributions } '
+            'commitContributionsByRepository(maxRepositories:100) '
+            '{ repository { nameWithOwner isPrivate } } }' % (year, year, end)
+        )
+    query = 'query { user(login:"%s") { %s } }' % (USER, " ".join(sections))
+    response = json.loads(run("gh", "api", "graphql", "-f", "query=" + query))
+    if response.get("errors"):
+        raise ValueError(response["errors"])
+    collections = response["data"]["user"]
+    rows = []
+    repositories = set()
+    for year in years:
+        collection = collections["y%s" % year]
+        rows.append({"year": year, "contributions": collection["contributionCalendar"]["totalContributions"]})
+        repositories.update(
+            item["repository"]["nameWithOwner"]
+            for item in collection["commitContributionsByRepository"]
+            if not item["repository"]["isPrivate"]
+        )
+    return rows, len(repositories)
+
+
+def public_commit_count():
+    response = json.loads(run("gh", "api", "-X", "GET", "search/commits",
+                              "-f", "q=author:" + USER, "-f", "per_page=1"))
+    if response.get("incomplete_results"):
+        raise ValueError("GitHub commit search results are incomplete")
+    return response["total_count"]
+
+
 def collect(cache, since):
     response = json.loads(run("gh", "api", "graphql", "-f", "query=" + QUERY))
     if response.get("errors"):
         raise ValueError(response["errors"])
     payload = response["data"]
     user = payload["user"]
+    years, all_time_repositories = contribution_history(user["createdAt"][:10])
+    authored_public_commits = public_commit_count()
     contributed = [
         {"name": item["repository"]["nameWithOwner"],
          "commits": item["contributions"]["totalCount"]}
@@ -103,14 +144,15 @@ def collect(cache, since):
         "followers": user["followers"]["totalCount"],
         "public_repos": user["repositories"]["totalCount"],
         "owned_repo_stars": sum(repo["stargazerCount"] for repo in user["repositories"]["nodes"]),
-        "commits_last_year": user["contributionsCollection"]["totalCommitContributions"],
-        "repos_with_commits_last_year": len(contributed),
+        "all_time_contributions": sum(item["contributions"] for item in years),
+        "yearly_contributions": years,
+        "public_authored_commits": authored_public_commits,
+        "repos_with_commits_all_time": all_time_repositories,
         "prs_opened": payload["prs"]["issueCount"],
         "prs_reviewed": payload["reviews"]["issueCount"],
         "issues_opened": payload["issues"]["issueCount"],
         "threads_commented": payload["commented"]["issueCount"],
         "rank": "A++",  # Preserved from the existing GitHub score card.
-        "top_repos": selected[:3],
         "languages": {
             "since": since,
             "repositories": len(selected),

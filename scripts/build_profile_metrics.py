@@ -96,8 +96,8 @@ def render(metrics, graph, graph_style, annual, through, output):
                            "stroke": "#30363d"})
 
     text(root, 18, 24, metrics["name"], 16, BLUE, "bold")
-    text(root, 18, 40, "@%s  ·  %s contributions in the last year" %
-         (metrics["login"], f"{annual:,}"), 10)
+    text(root, 18, 40, "@%s  ·  %s contributions all time" %
+         (metrics["login"], f"{metrics['all_time_contributions']:,}"), 10)
     add(root, "circle", {"cx": "690", "cy": "26", "r": "18", "fill": "#0d1117",
                          "stroke": BLUE, "stroke-width": "2.5"})
     text(root, 690, 30, metrics["rank"], 11, PALE, "bold", "middle")
@@ -109,20 +109,28 @@ def render(metrics, graph, graph_style, annual, through, output):
         "Joined %s" % joined,
         "%s public repositories" % metrics["public_repos"],
         "%s followers" % metrics["followers"],
-        "%s repositories committed to · 1y" % metrics["repos_with_commits_last_year"],
+        "%s repositories with commits · all time" % metrics["repos_with_commits_all_time"],
     )
     for index, fact in enumerate(facts):
         add(root, "circle", {"cx": "20", "cy": str(84 + index * 17), "r": "2", "fill": BLUE})
         text(root, 28, 87 + index * 17, fact, 9.5, PALE)
-    text(root, 18, 166, "MOST ACTIVE REPOS · COMMITS (1Y)", 9, BLUE, "bold")
-    for index, repo in enumerate(metrics["top_repos"]):
-        y = 185 + index * 21
-        text(root, 18, y, repo["name"], 9.5, PALE)
-        text(root, 220, y, f"{repo['commits']:,}", 9.5, BLUE, "bold", "end")
+    text(root, 18, 166, "CONTRIBUTIONS BY YEAR", 9, BLUE, "bold")
+    years = metrics["yearly_contributions"]
+    peak = max(item["contributions"] for item in years)
+    stride = min(23, 70 / max(1, len(years) - 1))
+    for index, item in enumerate(years):
+        y = 185 + index * stride
+        text(root, 18, y, str(item["year"]), 9.5, PALE)
+        add(root, "rect", {"x": "57", "y": str(y - 7), "width": "119", "height": "5",
+                           "rx": "2", "fill": "#203246"})
+        add(root, "rect", {"x": "57", "y": str(y - 7),
+                           "width": str(max(3, 119 * item["contributions"] / peak)),
+                           "height": "5", "rx": "2", "fill": BLUE})
+        text(root, 220, y, f"{item['contributions']:,}", 9.5, BLUE, "bold", "end")
     text(root, 18, 278, "Public GitHub data · %s" % metrics["as_of"], 8, MUTED)
 
-    text(root, 251, 69, "ACTIVITY", 9, BLUE, "bold")
-    stat(root, 251, 91, metrics["commits_last_year"], "commits · 1y")
+    text(root, 251, 69, "ACTIVITY · ALL TIME", 9, BLUE, "bold")
+    stat(root, 251, 91, metrics["public_authored_commits"], "public commits")
     stat(root, 362, 91, metrics["prs_opened"], "PRs opened")
     stat(root, 251, 132, metrics["prs_reviewed"], "PRs reviewed")
     stat(root, 362, 132, metrics["issues_opened"], "issues opened")
@@ -130,7 +138,7 @@ def render(metrics, graph, graph_style, annual, through, output):
     stat(root, 362, 173, metrics["owned_repo_stars"], "stars on my repos")
     language_panel(root, metrics)
 
-    text(root, 503, 69, "3D CONTRIBUTIONS", 9, BLUE, "bold")
+    text(root, 503, 69, "3D CONTRIBUTIONS · LAST YEAR", 9, BLUE, "bold")
     container = add(root, "g", {"transform": "translate(500 75) scale(0.17)"})
     container.append(copy.deepcopy(graph))
     text(root, 503, 245, "%s contributions · last year" % f"{annual:,}", 10, PALE, "bold")

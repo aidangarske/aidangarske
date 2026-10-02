@@ -36,7 +36,7 @@ def main():
     languages_height = int(languages.get("height"))
     gap = 12
     height = stats_height + gap + languages_height
-    summary = panel(width, height, "Aidan's GitHub stats and languages over the last year")
+    summary = panel(width, height, "Aidan's GitHub stats, yearly languages, and career source lines added")
     stats.set("width", str(width))
     stats.set("height", str(stats_height))
     languages.set("y", str(stats_height + gap))

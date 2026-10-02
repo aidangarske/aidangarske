@@ -2,7 +2,7 @@
   <tr>
     <td width="50%" valign="top">
       <a href="https://github.com/aidangarske?tab=overview">
-        <img width="520" src="./assets/profile-summary.svg" alt="Aidan's original all-time GitHub stats and rank, PR activity, and languages over the last year" />
+        <img width="520" src="./assets/profile-summary.svg" alt="Aidan's original all-time GitHub stats and rank, PR activity, yearly languages, and career source lines added" />
       </a>
     </td>
     <td width="50%" valign="top">

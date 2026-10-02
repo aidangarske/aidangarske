@@ -28,15 +28,23 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
+      - name: Restore public source history
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/profile-history
+          key: profile-history-v1-${{ github.run_id }}
+          restore-keys: profile-history-v1-
+
       - name: Refresh original stats card and lifetime PR activity
         run: python3 scripts/update_stats.py
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate languages from the last year of authored changes
-        run: python3 scripts/yearly_languages.py
+      - name: Generate yearly languages and career LOC totals
+        run: python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROFILE_HISTORY_CACHE: ${{ runner.temp }}/profile-history
 
       - name: Align the skyline with the stacked stats and languages
         run: python3 scripts/build_profile_layout.py

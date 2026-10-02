@@ -193,8 +193,12 @@ def collect(cache, since, through, include_private=False, minimum_private=0):
             if repo not in repos or private:
                 repos[repo] = private
                 credentials[repo] = env
-    if sum(repos.values()) < minimum_private:
-        raise ValueError("Private credential coverage is incomplete; existing totals were preserved. Add read-only tokens for the remaining repository owners to PROFILE_STATS_TOKEN, one per line.")
+    private_count = sum(repos.values())
+    print("Credential coverage: %s public and %s private repositories" %
+          (len(repos) - private_count, private_count), flush=True)
+    if private_count < minimum_private:
+        raise ValueError("Private credential coverage is incomplete (%s of at least %s private repositories accessible); existing totals were preserved. Add read-only tokens for the remaining repository owners to PROFILE_STATS_TOKEN, one per line." %
+                         (private_count, minimum_private))
     commits = {}
     # Public Actions caches must never contain private history or credentials.
     with TemporaryDirectory(prefix="private-profile-history-") as private_tmp, ThreadPoolExecutor(max_workers=4) as pool:

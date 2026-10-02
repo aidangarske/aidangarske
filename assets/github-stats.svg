@@ -48,7 +48,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 69.39929537262357;
+        stroke-dashoffset: 69.37910503642661;
       }
     }
 
@@ -154,4 +154,4 @@
     </svg>
 
         </g>
-      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 69.39929537262357 !important; }</style><circle cx="32" cy="196" r="3" fill="#58a6ff" /><text x="44" y="200" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">Total PRs Merged:</text><text x="220" y="200" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">528</text><circle cx="32" cy="221" r="3" fill="#58a6ff" /><text x="44" y="225" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">Total PRs Reviewed:</text><text x="220" y="225" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">254</text><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 528, "reviewed": 254}</metadata></svg>
+      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 69.37910503642661 !important; }</style><circle cx="32" cy="196" r="3" fill="#58a6ff" /><text x="44" y="200" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">Total PRs Merged:</text><text x="220" y="200" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">528</text><circle cx="32" cy="221" r="3" fill="#58a6ff" /><text x="44" y="225" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">Total PRs Reviewed:</text><text x="220" y="225" fill="#c9d1d9" font-size="14" font-weight="700" font-family="Inter, Arial, sans-serif">254</text><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 528, "reviewed": 254}</metadata></svg>

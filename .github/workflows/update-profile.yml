@@ -1,0 +1,57 @@
+name: Refresh profile cards
+
+on:
+  schedule:
+    - cron: "23 9 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - README.md
+      - .github/workflows/update-profile.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Generate GitHub stats and rank
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
+        with:
+          card: stats
+          options: username=aidangarske&show_icons=true&include_all_commits=true&show=reviews,prs_merged&number_format=long&card_width=420&custom_title=Aidan%27s%20GitHub%20Stats&title_color=58A6FF&icon_color=58A6FF&text_color=C9D1D9&bg_color=020C14&hide_border=true&disable_animations=true
+          path: assets/github-stats.svg
+          core_version: "2.2.0"
+          fail_on_error: "true"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate public repository languages
+        uses: stats-organization/github-readme-stats-action@2c498845f71017821efaad14293ebc736156ef21 # v2.1.0
+        with:
+          card: top-langs
+          options: username=aidangarske&layout=compact&langs_count=6&hide=html,css&card_width=420&custom_title=Public%20repo%20languages&title_color=58A6FF&icon_color=58A6FF&text_color=C9D1D9&bg_color=020C14&hide_border=true&disable_animations=true
+          path: assets/top-languages.svg
+          core_version: "2.2.0"
+          fail_on_error: "true"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit refreshed cards
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/github-stats.svg assets/top-languages.svg
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Refresh profile cards"
+          git push origin HEAD:main

@@ -44,16 +44,16 @@ def run(*args, input=None, env=None):
                           timeout=600).stdout
 
 
-def graphql(query):
-    response = json.loads(run("gh", "api", "graphql", "-f", "query=" + query))
+def graphql(query, env=None):
+    response = json.loads(run("gh", "api", "graphql", "-f", "query=" + query, env=env))
     if response.get("errors"):
         raise ValueError("GitHub could not collect the language source repositories")
     return response["data"]["user"]
 
 
-def repositories(since, through, include_private=False):
+def repositories(since, through, include_private=False, env=None):
     years = graphql('query { user(login:"%s") { contributionsCollection { contributionYears } } }'
-                    % USER)["contributionsCollection"]["contributionYears"]
+                    % USER, env=env)["contributionsCollection"]["contributionYears"]
     sections = []
     for year in years:
         end = min(through, "%s-12-31T23:59:59Z" % year)
@@ -62,7 +62,7 @@ def repositories(since, through, include_private=False):
             repository { nameWithOwner isPrivate }
           }
         }''' % (year, year, end))
-    history = graphql('query { user(login:"%s") { %s } }' % (USER, " ".join(sections)))
+    history = graphql('query { user(login:"%s") { %s } }' % (USER, " ".join(sections)), env=env)
     result = {}
     for collection in history.values():
         contributed = collection["commitContributionsByRepository"]
@@ -80,13 +80,13 @@ def repositories(since, through, include_private=False):
             nodes { nameWithOwner }
             pageInfo { hasNextPage endCursor }
           }
-        } }''' % (USER, after))["repositories"]
+        } }''' % (USER, after), env=env)["repositories"]
         result.update((repo["nameWithOwner"], False) for repo in owned["nodes"])
         if not owned["pageInfo"]["hasNextPage"]:
             break
         cursor = owned["pageInfo"]["endCursor"]
     if include_private:
-        viewer = json.loads(run("gh", "api", "user"))
+        viewer = json.loads(run("gh", "api", "user", env=env))
         if viewer.get("login", "").casefold() != USER:
             raise ValueError("Private totals require the profile owner's GitHub login")
         cursor = None
@@ -98,7 +98,7 @@ def repositories(since, through, include_private=False):
                 nodes { nameWithOwner }
                 pageInfo { hasNextPage endCursor }
               }
-            } }''' % (USER, after))["repositories"]
+            } }''' % (USER, after), env=env)["repositories"]
             result.update((repo["nameWithOwner"], True) for repo in private["nodes"])
             if not private["pageInfo"]["hasNextPage"]:
                 break
@@ -113,26 +113,26 @@ def is_author(name, email):
             or "aidangarske@users.noreply.github.com" in email)
 
 
-def authored_changes(repo, cache, since, through):
+def authored_changes(repo, cache, since, through, env=None):
     directory = cache / repo.replace("/", "__")
     # Fetch every branch, including pending work in personal forks.
     if (directory / ".git").exists():
-        run("git", "-C", str(directory), "fetch", "--quiet", "--prune", "origin")
+        run("git", "-C", str(directory), "fetch", "--quiet", "--prune", "origin", env=env)
     else:
         run("git", "clone", "--quiet", "--filter=blob:none", "--no-checkout",
             "--no-single-branch", "--no-tags",
-            "https://github.com/" + repo + ".git", str(directory))
-    return commit_changes(directory, since, through)
+            "https://github.com/" + repo + ".git", str(directory), env=env)
+    return commit_changes(directory, since, through, env=env)
 
 
-def commit_changes(directory, since, through):
+def commit_changes(directory, since, through, env=None):
     args = ["git", "-C", str(directory), "log", "--all", "--full-history", "--no-merges", "--regexp-ignore-case",
             "--author=^Aidan Garske <", "--author=^Aidan <aidan@wolfssl.com>",
             "--author=aidangarske@users.noreply.github.com"]
     # Filter by author before asking Git to compute file diffs. A path-limited
     # history walk can needlessly compare every upstream commit's trees.
     # Fetch changed blobs together instead of one network request per diff.
-    raw = run(*args, "--raw", "--no-abbrev", "--no-renames", "--format=")
+    raw = run(*args, "--raw", "--no-abbrev", "--no-renames", "--format=", env=env)
     objects = set()
     for line in raw.splitlines():
         if line.startswith(":"):
@@ -144,13 +144,13 @@ def commit_changes(directory, since, through):
     if objects:
         checked = run("git", "-C", str(directory), "cat-file", "--batch-check",
                       input="\n".join(sorted(objects)) + "\n",
-                      env=dict(os.environ, GIT_NO_LAZY_FETCH="1"))
+                      env=dict(os.environ if env is None else env, GIT_NO_LAZY_FETCH="1"))
         missing = [line.split()[0] for line in checked.splitlines() if line.endswith(" missing")]
         for offset in range(0, len(missing), 2048):
             run("git", "-C", str(directory), "-c", "fetch.negotiationAlgorithm=noop",
                 "fetch", "--quiet", "--no-tags", "--no-write-fetch-head", "--filter=blob:none",
-                "--stdin", "origin", input="\n".join(missing[offset:offset + 2048]) + "\n")
-    log = run(*args, "--numstat", "-z", "--find-renames", "--format=%x1e%H%x00%an%x00%ae%x00%aI%x00")
+                "--stdin", "origin", input="\n".join(missing[offset:offset + 2048]) + "\n", env=env)
+    log = run(*args, "--numstat", "-z", "--find-renames", "--format=%x1e%H%x00%an%x00%ae%x00%aI%x00", env=env)
     end = datetime.fromisoformat(through.replace("Z", "+00:00"))
     commits = {}
     active = None
@@ -181,13 +181,26 @@ def commit_changes(directory, since, through):
     return commits
 
 
-def collect(cache, since, through, include_private=False):
-    repos = repositories(since, through, include_private)
+def collect(cache, since, through, include_private=False, minimum_private=0):
+    # One read-only fine-grained token per owner, separated by newlines in the
+    # secret. Keep credentials in subprocess environments, never on disk.
+    tokens = [token.strip() for token in os.environ.get("PRIVATE_STATS_TOKEN", "").splitlines()
+              if token.strip()] if include_private else []
+    environments = [dict(os.environ, GH_TOKEN=token, PRIVATE_STATS_TOKEN="") for token in tokens] or [None]
+    repos, credentials = {}, {}
+    for env in environments:
+        for repo, private in repositories(since, through, include_private, env=env).items():
+            if repo not in repos or private:
+                repos[repo] = private
+                credentials[repo] = env
+    if sum(repos.values()) < minimum_private:
+        raise ValueError("Private credential coverage is incomplete; existing totals were preserved. Add read-only tokens for the remaining repository owners to PROFILE_STATS_TOKEN, one per line.")
     commits = {}
     # Public Actions caches must never contain private history or credentials.
     with TemporaryDirectory(prefix="private-profile-history-") as private_tmp, ThreadPoolExecutor(max_workers=4) as pool:
         results = pool.map(lambda repo: authored_changes(
-            repo, Path(private_tmp) if repos[repo] else cache, since, through), repos)
+            repo, Path(private_tmp) if repos[repo] else cache, since, through,
+            env=credentials[repo]), sorted(repos))
         for index, changes in enumerate(results, 1):
             commits.update(changes)
             print("Collected %s/%s repositories" % (index, len(repos)), flush=True)
@@ -284,20 +297,24 @@ def main():
                         help="Keep combined totals when a scheduled run has no private credential")
     parser.add_argument("--period", choices=("career", "year"), default="career")
     args = parser.parse_args()
-    if args.preserve_private and not args.include_private and args.output.exists():
+    previous = {}
+    if args.output.exists():
         metadata = ET.parse(args.output).find("{%s}metadata" % NS)
-        if metadata is not None and json.loads(metadata.text).get("scope") == "public + private":
-            print("Private totals preserved; configure PROFILE_STATS_TOKEN to refresh them.")
-            return
+        if metadata is not None:
+            previous = json.loads(metadata.text)
+    if args.preserve_private and not args.include_private and previous.get("scope") == "public + private":
+        print("Private totals preserved; configure PROFILE_STATS_TOKEN to refresh them.")
+        return
+    minimum_private = previous.get("private_repositories", 0) if args.include_private else 0
     now = datetime.now(timezone.utc)
     since = (now - timedelta(days=365)).isoformat().replace("+00:00", "Z")
     through = now.isoformat().replace("+00:00", "Z")
     if args.cache_dir:
         args.cache_dir.mkdir(parents=True, exist_ok=True)
-        data = collect(args.cache_dir, since, through, args.include_private)
+        data = collect(args.cache_dir, since, through, args.include_private, minimum_private)
     else:
         with TemporaryDirectory(prefix="yearly-languages-") as tmp:
-            data = collect(Path(tmp), since, through, args.include_private)
+            data = collect(Path(tmp), since, through, args.include_private, minimum_private)
     render(data, args.output, args.period)
     print("Rendered %s yearly authored changes and %s career source lines added" %
           (data["source_file_changes"], data["career_loc_added"]))
@@ -306,6 +323,8 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+    except ValueError as error:
+        raise SystemExit(str(error)) from None
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         # Failed Git commands can contain private repository names in argv/stderr.
         raise SystemExit("Repository history scan failed; check access and retry. Existing totals were preserved.") from None

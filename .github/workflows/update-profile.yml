@@ -48,7 +48,8 @@ jobs:
             python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE" --preserve-private
           fi
         env:
-          GH_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN || secrets.GITHUB_TOKEN }}
+          # One read-only token per repository owner, one token per line.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PRIVATE_STATS_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN }}
           PROFILE_HISTORY_CACHE: ${{ runner.temp }}/profile-history
 

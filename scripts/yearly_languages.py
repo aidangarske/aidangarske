@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render yearly language activity and career source-line additions."""
+"""Render authored language activity and public/private career additions."""
 
 import argparse
 from collections import Counter
@@ -33,6 +33,13 @@ ET.register_namespace("", NS)
 
 
 def run(*args, input=None, env=None):
+    if args[0] == "git":
+        env = dict(os.environ if env is None else env)
+        index = int(env.get("GIT_CONFIG_COUNT", "0"))
+        env.update({"GIT_CONFIG_COUNT": str(index + 1),
+                    "GIT_CONFIG_KEY_%s" % index: "credential.helper",
+                    "GIT_CONFIG_VALUE_%s" % index: "!gh auth git-credential",
+                    "GIT_TERMINAL_PROMPT": "0"})
     return subprocess.run(args, input=input, env=env, capture_output=True, text=True, errors="replace", check=True,
                           timeout=600).stdout
 
@@ -44,7 +51,7 @@ def graphql(query):
     return response["data"]["user"]
 
 
-def repositories(since, through):
+def repositories(since, through, include_private=False):
     years = graphql('query { user(login:"%s") { contributionsCollection { contributionYears } } }'
                     % USER)["contributionsCollection"]["contributionYears"]
     sections = []
@@ -56,13 +63,15 @@ def repositories(since, through):
           }
         }''' % (year, year, end))
     history = graphql('query { user(login:"%s") { %s } }' % (USER, " ".join(sections)))
-    result = set()
+    result = {}
     for collection in history.values():
         contributed = collection["commitContributionsByRepository"]
         if len(contributed) == 100:
             raise ValueError("GitHub's repository discovery limit was reached")
-        result.update(item["repository"]["nameWithOwner"] for item in contributed
-                      if not item["repository"]["isPrivate"])
+        for item in contributed:
+            repo = item["repository"]
+            if include_private or not repo["isPrivate"]:
+                result[repo["nameWithOwner"]] = repo["isPrivate"]
     cursor = None
     while True:
         after = ",after:" + json.dumps(cursor) if cursor else ""
@@ -72,10 +81,29 @@ def repositories(since, through):
             pageInfo { hasNextPage endCursor }
           }
         } }''' % (USER, after))["repositories"]
-        result.update(repo["nameWithOwner"] for repo in owned["nodes"])
+        result.update((repo["nameWithOwner"], False) for repo in owned["nodes"])
         if not owned["pageInfo"]["hasNextPage"]:
-            return sorted(result)
+            break
         cursor = owned["pageInfo"]["endCursor"]
+    if include_private:
+        viewer = json.loads(run("gh", "api", "user"))
+        if viewer.get("login", "").casefold() != USER:
+            raise ValueError("Private totals require the profile owner's GitHub login")
+        cursor = None
+        while True:
+            after = ",after:" + json.dumps(cursor) if cursor else ""
+            private = graphql('''query { user(login:"%s") {
+              repositories(first:100,privacy:PRIVATE,
+                affiliations:[OWNER,COLLABORATOR,ORGANIZATION_MEMBER]%s) {
+                nodes { nameWithOwner }
+                pageInfo { hasNextPage endCursor }
+              }
+            } }''' % (USER, after))["repositories"]
+            result.update((repo["nameWithOwner"], True) for repo in private["nodes"])
+            if not private["pageInfo"]["hasNextPage"]:
+                break
+            cursor = private["pageInfo"]["endCursor"]
+    return dict(sorted(result.items()))
 
 
 def is_author(name, email):
@@ -153,14 +181,16 @@ def commit_changes(directory, since, through):
     return commits
 
 
-def collect(cache, since, through):
-    repos = repositories(since, through)
+def collect(cache, since, through, include_private=False):
+    repos = repositories(since, through, include_private)
     commits = {}
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        results = pool.map(lambda repo: authored_changes(repo, cache, since, through), repos)
+    # Public Actions caches must never contain private history or credentials.
+    with TemporaryDirectory(prefix="private-profile-history-") as private_tmp, ThreadPoolExecutor(max_workers=4) as pool:
+        results = pool.map(lambda repo: authored_changes(
+            repo, Path(private_tmp) if repos[repo] else cache, since, through), repos)
         for index, changes in enumerate(results, 1):
             commits.update(changes)
-            print("Collected %s/%s public repositories" % (index, len(repos)), flush=True)
+            print("Collected %s/%s repositories" % (index, len(repos)), flush=True)
     counts = Counter()
     career_added = Counter()
     career_deleted = Counter()
@@ -174,9 +204,11 @@ def collect(cache, since, through):
             counts.update(changes["files"])
             year_added.update(changes["added"])
             year_commits += 1
-    if not counts:
+    if not career_added:
         raise ValueError("No authored source changes found; preserving the existing card")
     return {"since": since, "through": through, "repositories": len(repos),
+            "private_repositories": sum(repos.values()),
+            "scope": "public + private" if include_private else "public",
             "authored_commits": year_commits, "source_file_changes": sum(counts.values()),
             "counts": dict(counts.most_common()), "career_commits": len(commits),
             "career_loc_added": sum(career_added.values()),
@@ -184,18 +216,24 @@ def collect(cache, since, through):
             "career_added": dict(career_added.most_common()),
             "career_deleted": dict(career_deleted.most_common()),
             "year_added": dict(year_added.most_common()),
-            "loc_method": "Public Git source-line additions, including comments and blank lines; non-merge authored commits; exact SHA duplicates counted once; renames detected."}
+            "loc_method": "Git source-line additions, including comments and blank lines; non-merge authored commits; exact SHA duplicates counted once; renames detected. Only accessible repositories are included."}
 
 
-def render(data, output):
-    names = set(data["counts"]) | set(data["career_added"])
-    shown = sorted(((name, data["counts"].get(name, 0)) for name in names),
+def render(data, output, period="career"):
+    activity = data["career_added"] if period == "career" else data["counts"]
+    names = set(activity) | set(data["career_added"])
+    shown = sorted(((name, activity.get(name, 0)) for name in names),
                    key=lambda item: (item[1], data["career_added"].get(item[0], 0)), reverse=True)
-    total = data["source_file_changes"]
+    total = sum(activity.values())
+    if not total:
+        raise ValueError("No source activity found for the selected language period")
+    title = "Languages · all time" if period == "career" else "Languages · last year"
+    data = dict(data, language_period=period,
+                language_percentage_metric="source lines added" if period == "career" else "source-file changes")
     height = 135 + 28 * ((len(shown) + 1) // 2)
     root = ET.Element("{%s}svg" % NS, {
         "width": "520", "height": str(height), "viewBox": "0 0 520 %s" % height,
-        "role": "img", "aria-label": "Languages in Aidan's authored changes over the last year",
+        "role": "img", "aria-label": title + " · " + data["scope"],
     })
 
     def add(tag, attrs=None, value=None):
@@ -207,14 +245,15 @@ def render(data, output):
         add("text", {"x": str(x), "y": str(y), "font-size": str(size), "fill": color,
                      "font-weight": weight, "font-family": "Segoe UI, Arial, sans-serif"}, value)
 
-    add("title", value="Languages · last year")
+    add("title", value=title)
     add("desc", value=data["loc_method"])
     add("metadata", {"id": "language-data"}, json.dumps(data, sort_keys=True))
     add("rect", {"width": "520", "height": str(height), "rx": "5", "fill": "#020c14"})
-    text(25, 32, "Languages · last year", 20, "#58a6ff", "600")
+    text(25, 32, title, 20, "#58a6ff", "600")
     text(25, 54, "Career LOC added: %s" % f"{data['career_loc_added']:,}", 15, "#c9d1d9", "600")
-    text(25, 73, "%s removed · public Git history" % f"{data['career_loc_deleted']:,}", 12, "#8b949e")
-    text(25, 93, "Last-year activity % · career LOC added", 12, "#8b949e")
+    text(25, 73, "%s removed · %s Git history" % (f"{data['career_loc_deleted']:,}", data["scope"]), 12, "#8b949e")
+    text(25, 93, "Career LOC share % · career LOC added" if period == "career" else
+         "Last-year activity % · career LOC added", 12, "#8b949e")
     x = 25.0
     for name, count in shown:
         width = 470 * count / total
@@ -230,7 +269,8 @@ def render(data, output):
         loc = data["career_added"].get(name, 0)
         amount = f"{loc:,}"
         text(x + 14, y, "%s %s · %s LOC" % (name, value, amount), 13)
-    text(25, height - 11, "%s — %s" % (data["since"][:10], data["through"][:10]), 11, "#8b949e")
+    footer = "Updated " + data["through"][:10] if period == "career" else "%s — %s" % (data["since"][:10], data["through"][:10])
+    text(25, height - 11, footer, 11, "#8b949e")
     output.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(root).write(output, encoding="utf-8", xml_declaration=True)
 
@@ -239,20 +279,33 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=Path("assets/top-languages.svg"))
     parser.add_argument("--cache-dir", type=Path)
+    parser.add_argument("--include-private", action="store_true")
+    parser.add_argument("--preserve-private", action="store_true",
+                        help="Keep combined totals when a scheduled run has no private credential")
+    parser.add_argument("--period", choices=("career", "year"), default="career")
     args = parser.parse_args()
+    if args.preserve_private and not args.include_private and args.output.exists():
+        metadata = ET.parse(args.output).find("{%s}metadata" % NS)
+        if metadata is not None and json.loads(metadata.text).get("scope") == "public + private":
+            print("Private totals preserved; configure PROFILE_STATS_TOKEN to refresh them.")
+            return
     now = datetime.now(timezone.utc)
     since = (now - timedelta(days=365)).isoformat().replace("+00:00", "Z")
     through = now.isoformat().replace("+00:00", "Z")
     if args.cache_dir:
         args.cache_dir.mkdir(parents=True, exist_ok=True)
-        data = collect(args.cache_dir, since, through)
+        data = collect(args.cache_dir, since, through, args.include_private)
     else:
         with TemporaryDirectory(prefix="yearly-languages-") as tmp:
-            data = collect(Path(tmp), since, through)
-    render(data, args.output)
+            data = collect(Path(tmp), since, through, args.include_private)
+    render(data, args.output, args.period)
     print("Rendered %s yearly authored changes and %s career source lines added" %
           (data["source_file_changes"], data["career_loc_added"]))
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        # Failed Git commands can contain private repository names in argv/stderr.
+        raise SystemExit("Repository history scan failed; check access and retry. Existing totals were preserved.") from None

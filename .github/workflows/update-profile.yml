@@ -40,10 +40,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate yearly languages and career LOC totals
-        run: python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE"
+      - name: Generate all-time languages and career LOC totals
+        run: |
+          if [ -n "$PRIVATE_STATS_TOKEN" ]; then
+            python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE" --include-private
+          else
+            python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE" --preserve-private
+          fi
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN || secrets.GITHUB_TOKEN }}
+          PRIVATE_STATS_TOKEN: ${{ secrets.PROFILE_STATS_TOKEN }}
           PROFILE_HISTORY_CACHE: ${{ runner.temp }}/profile-history
 
       - name: Align the skyline with the stacked stats and languages

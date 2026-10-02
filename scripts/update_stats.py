@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Keep the original hosted stats card and append lifetime PR activity."""
+"""Keep the original hosted stats card and align lifetime PR activity."""
 
+import copy
 import json
 from pathlib import Path
 import re
@@ -47,19 +48,31 @@ def main():
     style.text = "* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; }"
     if final_offset:
         style.text += " .rank-circle { stroke-dashoffset: %s !important; }" % final_offset.group(1)
-    for index, (label, value) in enumerate((
-        ("Total PRs Merged:", merged), ("Total PRs Reviewed:", reviewed),
+    body = root.find("{%s}g[@data-testid='main-card-body']" % NS)
+    rows = body.find("{%s}svg" % NS)
+    template = next(row for row in rows if row.find(".//{%s}text[@data-testid='prs']" % NS) is not None)
+    for index, (label, value, key) in enumerate((
+        ("PRs merged:", merged, "prs-merged"),
+        ("PRs reviewed:", reviewed, "prs-reviewed"),
     )):
-        y = height + 5 + index * 25
-        ET.SubElement(root, "{%s}circle" % NS, {
-            "cx": "32", "cy": str(y - 4), "r": "3", "fill": "#58a6ff",
-        })
-        for x, text in ((44, label), (220, f"{value:,}")):
-            node = ET.SubElement(root, "{%s}text" % NS, {
-                "x": str(x), "y": str(y), "fill": "#c9d1d9", "font-size": "14",
-                "font-weight": "700", "font-family": "Inter, Arial, sans-serif",
-            })
-            node.text = text
+        row = copy.deepcopy(template)
+        texts = row.findall(".//{%s}text" % NS)
+        texts[0].text = label
+        texts[1].text = f"{value:,}"
+        texts[1].set("data-testid", key)
+        rows.insert(3 + index, row)
+    for index, row in enumerate(rows):
+        row.set("transform", "translate(0, %s)" % (index * 27))
+        for text in row.findall(".//{%s}text" % NS):
+            text.set("y", "14")
+            text.set("style", "font-size: 16px")
+    new_height = height + 50 + 12
+    root.set("height", str(new_height))
+    root.set("viewBox", "0 0 %s %s" % (width, new_height))
+    rank = body.find("{%s}g[@data-testid='rank-circle']" % NS)
+    rank.set("transform", "translate(400, 82)")
+    rank.find("{%s}g[@class='rank-text']" % NS).set("transform", "translate(-10, 8)")
+    style.text += " .header { font-size: 20px; }"
     metadata = ET.SubElement(root, "{%s}metadata" % NS, {"id": "additional-pr-stats"})
     metadata.text = json.dumps({"provider": URL, "merged": merged, "reviewed": reviewed})
     output = Path("assets/github-stats.svg")

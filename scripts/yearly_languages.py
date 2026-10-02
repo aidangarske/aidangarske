@@ -21,7 +21,12 @@ LANGUAGES = {
     ".sh": "Shell", ".bash": "Shell", ".zsh": "Shell", ".java": "Java",
     ".cs": "C#", ".go": "Go", ".groovy": "Groovy", ".rb": "Ruby",
 }
-COLORS = ("#58a6ff", "#338fdd", "#2675bd", "#62b9e7", "#9ad8f5", "#1b5e95")
+COLORS = {
+    "C": "#a8b9cc", "C++": "#f34b7d", "C#": "#b56bc3",
+    "Shell": "#89e051", "Rust": "#dea584", "TypeScript": "#3178c6",
+    "Python": "#3572a5", "JavaScript": "#f1e05a", "Assembly": "#c59b55",
+    "Go": "#00add8", "Java": "#e79432", "Groovy": "#4298b8", "Ruby": "#cc342d",
+}
 NS = "http://www.w3.org/2000/svg"
 ET.register_namespace("", NS)
 
@@ -129,14 +134,11 @@ def collect(cache, since, through):
 
 
 def render(data, output):
-    ordered = list(data["counts"].items())
+    shown = sorted(data["counts"].items(), key=lambda item: item[1], reverse=True)
     total = data["source_file_changes"]
-    shown = ordered[:6]
-    if len(ordered) > 6:
-        shown = ordered[:5] + [("Other", sum(count for _, count in ordered[5:]))]
-    height = 96 + 25 * ((len(shown) + 1) // 2)
+    height = 104 + 28 * ((len(shown) + 2) // 3)
     root = ET.Element("{%s}svg" % NS, {
-        "width": "420", "height": str(height), "viewBox": "0 0 420 %s" % height,
+        "width": "520", "height": str(height), "viewBox": "0 0 520 %s" % height,
         "role": "img", "aria-label": "Languages in Aidan's authored changes over the last year",
     })
 
@@ -145,28 +147,30 @@ def render(data, output):
         node.text = str(value) if value is not None else None
         return node
 
-    def text(x, y, value, size=12, color="#c9d1d9", weight="400"):
+    def text(x, y, value, size=14, color="#c9d1d9", weight="400"):
         add("text", {"x": str(x), "y": str(y), "font-size": str(size), "fill": color,
                      "font-weight": weight, "font-family": "Segoe UI, Arial, sans-serif"}, value)
 
     add("title", value="Languages · last year")
     add("desc", value="Public authored source-file changes across all scanned branches; duplicate commit hashes count once.")
     add("metadata", {"id": "language-data"}, json.dumps(data, sort_keys=True))
-    add("rect", {"width": "420", "height": str(height), "rx": "5", "fill": "#020c14"})
-    text(25, 32, "Languages · last year", 18, "#58a6ff", "600")
-    text(25, 51, "Authored source-file changes", 11, "#8b949e")
+    add("rect", {"width": "520", "height": str(height), "rx": "5", "fill": "#020c14"})
+    text(25, 32, "Languages · last year", 20, "#58a6ff", "600")
+    text(25, 51, "Authored source-file changes", 12, "#8b949e")
     x = 25.0
-    for index, (_, count) in enumerate(shown):
-        width = 370 * count / total
+    for name, count in shown:
+        width = 470 * count / total
         add("rect", {"x": str(x), "y": "64", "width": str(width), "height": "8",
-                     "fill": COLORS[index]})
+                     "fill": COLORS.get(name, "#8b949e")})
         x += width
     for index, (name, count) in enumerate(shown):
-        x = 25 + (index % 2) * 190
-        y = 96 + (index // 2) * 25
-        add("circle", {"cx": str(x + 4), "cy": str(y - 4), "r": "4", "fill": COLORS[index]})
-        text(x + 14, y, "%s %.1f%%" % (name, 100 * count / total))
-    text(25, height - 11, "%s — %s" % (data["since"][:10], data["through"][:10]), 10, "#8b949e")
+        x = 25 + (index % 3) * 158
+        y = 96 + (index // 3) * 28
+        add("circle", {"cx": str(x + 4), "cy": str(y - 4), "r": "4", "fill": COLORS.get(name, "#8b949e")})
+        percentage = 100 * count / total
+        value = "<0.1%" if percentage < 0.1 else "%.1f%%" % percentage
+        text(x + 14, y, "%s %s" % (name, value))
+    text(25, height - 11, "%s — %s" % (data["since"][:10], data["through"][:10]), 11, "#8b949e")
     output.parent.mkdir(parents=True, exist_ok=True)
     ET.ElementTree(root).write(output, encoding="utf-8", xml_declaration=True)
 

@@ -89,20 +89,14 @@ def repositories(since, through, include_private=False, env=None):
         viewer = json.loads(run("gh", "api", "user", env=env))
         if viewer.get("login", "").casefold() != USER:
             raise ValueError("Private totals require the profile owner's GitHub login")
-        cursor = None
-        while True:
-            after = ",after:" + json.dumps(cursor) if cursor else ""
-            private = graphql('''query { user(login:"%s") {
-              repositories(first:100,privacy:PRIVATE,
-                affiliations:[OWNER,COLLABORATOR,ORGANIZATION_MEMBER]%s) {
-                nodes { nameWithOwner }
-                pageInfo { hasNextPage endCursor }
-              }
-            } }''' % (USER, after), env=env)["repositories"]
-            result.update((repo["nameWithOwner"], True) for repo in private["nodes"])
-            if not private["pageInfo"]["hasNextPage"]:
-                break
-            cursor = private["pageInfo"]["endCursor"]
+        # List the authenticated token's repositories directly, including
+        # selected repositories granted to fine-grained read-only tokens.
+        pages = json.loads(run("gh", "api", "--paginate", "--slurp", "user/repos",
+                               "-X", "GET", "-f", "visibility=private",
+                               "-f", "affiliation=owner,collaborator,organization_member",
+                               "-f", "per_page=100", env=env))
+        for page in pages:
+            result.update((repo["full_name"], True) for repo in page if repo["private"])
     return dict(sorted(result.items()))
 
 

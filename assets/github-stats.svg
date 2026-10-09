@@ -48,7 +48,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 66.78839855521824;
+        stroke-dashoffset: 66.66340068159242;
       }
     }
 
@@ -108,7 +108,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Total Stars:</text>
-      <text class="stat" x="150" y="14" data-testid="stars" style="font-size: 16px">26</text>
+      <text class="stat" x="150" y="14" data-testid="stars" style="font-size: 16px">27</text>
     </g>
   </g><g transform="translate(0, 27)">
     <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
@@ -128,7 +128,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Total PRs:</text>
-      <text class="stat" x="150" y="14" data-testid="prs" style="font-size: 16px">628</text>
+      <text class="stat" x="150" y="14" data-testid="prs" style="font-size: 16px">650</text>
     </g>
   </g><g transform="translate(0, 81)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -138,7 +138,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">PRs merged:</text>
-      <text class="stat" x="150" y="14" data-testid="prs-merged" style="font-size: 16px">548</text>
+      <text class="stat" x="150" y="14" data-testid="prs-merged" style="font-size: 16px">551</text>
     </g>
   </g><g transform="translate(0, 108)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -148,7 +148,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">PRs reviewed:</text>
-      <text class="stat" x="150" y="14" data-testid="prs-reviewed" style="font-size: 16px">261</text>
+      <text class="stat" x="150" y="14" data-testid="prs-reviewed" style="font-size: 16px">264</text>
     </g>
   </g><g transform="translate(0, 135)">
     <g class="stagger" style="animation-delay: 900ms" transform="translate(25, 0)">
@@ -158,7 +158,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Total Issues:</text>
-      <text class="stat" x="150" y="14" data-testid="issues" style="font-size: 16px">284</text>
+      <text class="stat" x="150" y="14" data-testid="issues" style="font-size: 16px">287</text>
     </g>
   </g><g transform="translate(0, 162)">
     <g class="stagger" style="animation-delay: 1050ms" transform="translate(25, 0)">
@@ -174,4 +174,4 @@
     </svg>
 
         </g>
-      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 66.78839855521824 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 548, "reviewed": 261}</metadata></svg>
+      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 66.66340068159242 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 551, "reviewed": 264}</metadata></svg>

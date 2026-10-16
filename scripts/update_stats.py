@@ -32,7 +32,7 @@ def count(query):
 
 def decorate_rank(rank):
     label = rank.find("{%s}g[@class='rank-text']" % NS)
-    tier = "".join(label.itertext()).strip()
+    tier = "".join(label.itertext()).split()[0]
     for child in list(label):
         label.remove(child)
     label.text = None
@@ -40,26 +40,11 @@ def decorate_rank(rank):
     rank.set("role", "img")
     rank.set("aria-label", "%s tier" % tier)
     ET.SubElement(rank, "{%s}title" % NS).text = "%s tier" % tier
-    if tier == "S":
-        # Pair the live S rank with a crown; keep the provider's rank value.
-        ET.SubElement(label, "{%s}path" % NS, {
-            "d": "M-29,-8 L-23,-2 L-18,-12 L-13,-2 L-7,-8 L-10,7 L-26,7 Z",
-            "fill": "#f4c76c", "stroke": "#f4c76c",
-            "stroke-width": "1.5", "stroke-linejoin": "round",
-        })
-        ET.SubElement(label, "{%s}path" % NS, {
-            "d": "M-26,11 H-10", "stroke": "#f4c76c",
-            "stroke-width": "2", "stroke-linecap": "round",
-        })
     ET.SubElement(label, "{%s}text" % NS, {
-        "x": "10" if tier == "S" else "0", "y": "2",
+        "x": "0", "y": "0",
         "dominant-baseline": "central", "text-anchor": "middle",
-        "style": "font-size: 30px; font-weight: 800; fill: #c9d1d9",
-    }).text = tier
-    ET.SubElement(label, "{%s}text" % NS, {
-        "x": "0", "y": "26", "text-anchor": "middle",
-        "style": "font-size: 10px; font-weight: 700; letter-spacing: 2px; fill: #58a6ff",
-    }).text = "TIER"
+        "style": "font-size: 17px; font-weight: 700; fill: #c9d1d9",
+    }).text = "%s Tier" % tier
 
 
 def main():

@@ -48,7 +48,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 61.92075440563675;
+        stroke-dashoffset: 61.88902179106401;
       }
     }
 
@@ -92,7 +92,11 @@
     <g data-testid="rank-circle" transform="translate(400, 82)">
         <circle class="rank-circle-rim" cx="-10" cy="8" r="40" />
         <circle class="rank-circle" cx="-10" cy="8" r="40" />
-        <g class="rank-text" transform="translate(-10, 8)"><text x="-4" y="0" alignment-baseline="central" dominant-baseline="central" text-anchor="middle">S</text></g>
+        <g class="rank-text" transform="translate(-10, 8)">
+          <text x="-4" y="0" alignment-baseline="central" dominant-baseline="central" text-anchor="middle">
+            S
+          </text>
+        </g>
       </g>
 
     <svg x="0" y="0">
@@ -170,4 +174,4 @@
     </svg>
 
         </g>
-      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 61.92075440563675 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 591, "reviewed": 271}</metadata></svg>
+      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 61.88902179106401 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 591, "reviewed": 271}</metadata></svg>

@@ -30,6 +30,38 @@ def count(query):
     return data["total_count"]
 
 
+def decorate_rank(rank):
+    label = rank.find("{%s}g[@class='rank-text']" % NS)
+    tier = "".join(label.itertext()).strip()
+    for child in list(label):
+        label.remove(child)
+    label.text = None
+    label.set("transform", "translate(-10, 8)")
+    rank.set("role", "img")
+    rank.set("aria-label", "%s tier" % tier)
+    ET.SubElement(rank, "{%s}title" % NS).text = "%s tier" % tier
+    if tier == "S":
+        # Pair the live S rank with a crown; keep the provider's rank value.
+        ET.SubElement(label, "{%s}path" % NS, {
+            "d": "M-29,-8 L-23,-2 L-18,-12 L-13,-2 L-7,-8 L-10,7 L-26,7 Z",
+            "fill": "#f4c76c", "stroke": "#f4c76c",
+            "stroke-width": "1.5", "stroke-linejoin": "round",
+        })
+        ET.SubElement(label, "{%s}path" % NS, {
+            "d": "M-26,11 H-10", "stroke": "#f4c76c",
+            "stroke-width": "2", "stroke-linecap": "round",
+        })
+    ET.SubElement(label, "{%s}text" % NS, {
+        "x": "10" if tier == "S" else "0", "y": "2",
+        "dominant-baseline": "central", "text-anchor": "middle",
+        "style": "font-size: 30px; font-weight: 800; fill: #c9d1d9",
+    }).text = tier
+    ET.SubElement(label, "{%s}text" % NS, {
+        "x": "0", "y": "26", "text-anchor": "middle",
+        "style": "font-size: 10px; font-weight: 700; letter-spacing: 2px; fill: #58a6ff",
+    }).text = "TIER"
+
+
 def main():
     with urlopen(Request(URL, headers={"User-Agent": "aidan-profile"}), timeout=60) as response:
         root = ET.fromstring(response.read())
@@ -71,7 +103,7 @@ def main():
     root.set("viewBox", "0 0 %s %s" % (width, new_height))
     rank = body.find("{%s}g[@data-testid='rank-circle']" % NS)
     rank.set("transform", "translate(400, 82)")
-    rank.find("{%s}g[@class='rank-text']" % NS).set("transform", "translate(-10, 8)")
+    decorate_rank(rank)
     style.text += " .header { font-size: 20px; }"
     metadata = ET.SubElement(root, "{%s}metadata" % NS, {"id": "additional-pr-stats"})
     metadata.text = json.dumps({"provider": URL, "merged": merged, "reviewed": reviewed})

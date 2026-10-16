@@ -30,23 +30,6 @@ def count(query):
     return data["total_count"]
 
 
-def decorate_rank(rank):
-    label = rank.find("{%s}g[@class='rank-text']" % NS)
-    tier = label.find("{%s}text" % NS).text.split()[0]
-    for child in list(label):
-        label.remove(child)
-    label.text = None
-    label.set("transform", "translate(-10, 8)")
-    rank.set("role", "img")
-    rank.set("aria-label", "%s tier" % tier)
-    ET.SubElement(rank, "{%s}title" % NS).text = "%s tier" % tier
-    ET.SubElement(label, "{%s}text" % NS, {
-        "x": "0", "y": "0",
-        "dominant-baseline": "central", "text-anchor": "middle",
-        "style": "font-size: 17px; font-weight: 700; fill: #c9d1d9",
-    }).text = "%s Tier" % tier
-
-
 def main():
     with urlopen(Request(URL, headers={"User-Agent": "aidan-profile"}), timeout=60) as response:
         root = ET.fromstring(response.read())
@@ -88,7 +71,7 @@ def main():
     root.set("viewBox", "0 0 %s %s" % (width, new_height))
     rank = body.find("{%s}g[@data-testid='rank-circle']" % NS)
     rank.set("transform", "translate(400, 82)")
-    decorate_rank(rank)
+    rank.find("{%s}g[@class='rank-text']" % NS).set("transform", "translate(-10, 8)")
     style.text += " .header { font-size: 20px; }"
     metadata = ET.SubElement(root, "{%s}metadata" % NS, {"id": "additional-pr-stats"})
     metadata.text = json.dumps({"provider": URL, "merged": merged, "reviewed": reviewed})

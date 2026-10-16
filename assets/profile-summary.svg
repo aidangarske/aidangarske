@@ -89,11 +89,11 @@
 
         <g data-testid="main-card-body" transform="translate(0, 55)">
 
-    <g data-testid="rank-circle" transform="translate(400, 82)" role="img" aria-label="S tier">
+    <g data-testid="rank-circle" transform="translate(400, 82)">
         <circle class="rank-circle-rim" cx="-10" cy="8" r="40" />
         <circle class="rank-circle" cx="-10" cy="8" r="40" />
-        <g class="rank-text" transform="translate(-10, 8)"><text x="0" y="0" dominant-baseline="central" text-anchor="middle" style="font-size: 17px; font-weight: 700; fill: #c9d1d9">S Tier</text></g>
-      <title>S tier</title></g>
+        <g class="rank-text" transform="translate(-10, 8)"><text x="-4" y="0" alignment-baseline="central" dominant-baseline="central" text-anchor="middle">S</text></g>
+      </g>
 
     <svg x="0" y="0">
       <g transform="translate(0, 0)">

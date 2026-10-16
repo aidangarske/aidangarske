@@ -12,6 +12,7 @@ on:
       - scripts/yearly_languages.py
       - scripts/update_stats.py
       - scripts/build_profile_layout.py
+      - tests/**
 
 permissions:
   contents: write
@@ -28,6 +29,9 @@ jobs:
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
+      - name: Check private repository coverage handling
+        run: python3 -m unittest discover -s tests
+
       - name: Restore public source history
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
@@ -41,6 +45,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate all-time languages and career LOC totals
+        id: languages
+        continue-on-error: true
         run: |
           if [ -n "$PRIVATE_STATS_TOKEN" ]; then
             python3 scripts/yearly_languages.py --cache-dir "$PROFILE_HISTORY_CACHE" --include-private
@@ -66,3 +72,9 @@ jobs:
           fi
           git commit -m "Refresh profile cards"
           git push origin HEAD:main
+
+      - name: Report private statistics failure after saving public updates
+        if: steps.languages.outcome == 'failure'
+        run: |
+          echo "::error::Language statistics could not refresh. Previous language totals were preserved; public cards were refreshed."
+          exit 1

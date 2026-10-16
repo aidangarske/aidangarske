@@ -175,7 +175,7 @@ def commit_changes(directory, since, through, env=None):
     return commits
 
 
-def collect(cache, since, through, include_private=False, minimum_private=0):
+def collect(cache, since, through, include_private=False, previous_private=0):
     # One read-only fine-grained token per owner, separated by newlines in the
     # secret. Keep credentials in subprocess environments, never on disk.
     tokens = [token.strip() for token in os.environ.get("PRIVATE_STATS_TOKEN", "").splitlines()
@@ -190,9 +190,13 @@ def collect(cache, since, through, include_private=False, minimum_private=0):
     private_count = sum(repos.values())
     print("Credential coverage: %s public and %s private repositories" %
           (len(repos) - private_count, private_count), flush=True)
-    if private_count < minimum_private:
-        raise ValueError("Private credential coverage is incomplete (%s of at least %s private repositories accessible); existing totals were preserved. Add read-only tokens for the remaining repository owners to PROFILE_STATS_TOKEN, one per line." %
-                         (private_count, minimum_private))
+    if include_private and previous_private and not private_count:
+        raise ValueError("No private repositories are accessible; existing totals were preserved. Check PROFILE_STATS_TOKEN access.")
+    if include_private and private_count < previous_private:
+        # Repositories can be deleted, transferred, or made public. An old
+        # repository count cannot establish today's credential coverage.
+        print("::warning::Private repository count decreased from %s to %s. Totals cover currently accessible repositories." %
+              (previous_private, private_count), flush=True)
     commits = {}
     # Public Actions caches must never contain private history or credentials.
     with TemporaryDirectory(prefix="private-profile-history-") as private_tmp, ThreadPoolExecutor(max_workers=4) as pool:
@@ -303,16 +307,16 @@ def main():
     if args.preserve_private and not args.include_private and previous.get("scope") == "public + private":
         print("Private totals preserved; configure PROFILE_STATS_TOKEN to refresh them.")
         return
-    minimum_private = previous.get("private_repositories", 0) if args.include_private else 0
+    previous_private = previous.get("private_repositories", 0) if args.include_private else 0
     now = datetime.now(timezone.utc)
     since = (now - timedelta(days=365)).isoformat().replace("+00:00", "Z")
     through = now.isoformat().replace("+00:00", "Z")
     if args.cache_dir:
         args.cache_dir.mkdir(parents=True, exist_ok=True)
-        data = collect(args.cache_dir, since, through, args.include_private, minimum_private)
+        data = collect(args.cache_dir, since, through, args.include_private, previous_private)
     else:
         with TemporaryDirectory(prefix="yearly-languages-") as tmp:
-            data = collect(Path(tmp), since, through, args.include_private, minimum_private)
+            data = collect(Path(tmp), since, through, args.include_private, previous_private)
     render(data, args.output, args.period)
     print("Rendered %s yearly authored changes and %s career source lines added" %
           (data["source_file_changes"], data["career_loc_added"]))

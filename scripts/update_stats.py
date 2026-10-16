@@ -32,7 +32,7 @@ def count(query):
 
 def decorate_rank(rank):
     label = rank.find("{%s}g[@class='rank-text']" % NS)
-    tier = "".join(label.itertext()).split()[0]
+    tier = label.find("{%s}text" % NS).text.split()[0]
     for child in list(label):
         label.remove(child)
     label.text = None

@@ -48,7 +48,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 59.93760313324689;
+        stroke-dashoffset: 58.78697074183812;
       }
     }
 
@@ -118,7 +118,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Total Commits:</text>
-      <text class="stat" x="150" y="14" data-testid="commits" style="font-size: 16px">8.7k</text>
+      <text class="stat" x="150" y="14" data-testid="commits" style="font-size: 16px">8.9k</text>
     </g>
   </g><g transform="translate(0, 54)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -128,7 +128,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Total PRs:</text>
-      <text class="stat" x="150" y="14" data-testid="prs" style="font-size: 16px">728</text>
+      <text class="stat" x="150" y="14" data-testid="prs" style="font-size: 16px">754</text>
     </g>
   </g><g transform="translate(0, 81)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -138,7 +138,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">PRs merged:</text>
-      <text class="stat" x="150" y="14" data-testid="prs-merged" style="font-size: 16px">602</text>
+      <text class="stat" x="150" y="14" data-testid="prs-merged" style="font-size: 16px">619</text>
     </g>
   </g><g transform="translate(0, 108)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -148,7 +148,7 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">PRs reviewed:</text>
-      <text class="stat" x="150" y="14" data-testid="prs-reviewed" style="font-size: 16px">285</text>
+      <text class="stat" x="150" y="14" data-testid="prs-reviewed" style="font-size: 16px">287</text>
     </g>
   </g><g transform="translate(0, 135)">
     <g class="stagger" style="animation-delay: 900ms" transform="translate(25, 0)">
@@ -168,10 +168,10 @@
     </svg>
 
       <text class="stat bold" x="25" y="14" style="font-size: 16px">Contributed to:</text>
-      <text class="stat" x="150" y="14" data-testid="contribs" style="font-size: 16px">29</text>
+      <text class="stat" x="150" y="14" data-testid="contribs" style="font-size: 16px">30</text>
     </g>
   </g>
     </svg>
 
         </g>
-      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 59.93760313324689 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 602, "reviewed": 285}</metadata></svg>
+      <style>* { animation: none !important; } .header, .stagger, .rank-text { opacity: 1 !important; } .rank-circle { stroke-dashoffset: 58.78697074183812 !important; } .header { font-size: 20px; }</style><metadata id="additional-pr-stats">{"provider": "https://github-readme-stats-eight-theta.vercel.app/api?username=aidangarske&amp;include_all_commits=true&amp;show_icons=true&amp;title_color=58A6FF&amp;icon_color=58A6FF&amp;text_color=C9D1D9&amp;bg_color=020C14&amp;hide_border=true", "merged": 619, "reviewed": 287}</metadata></svg>
